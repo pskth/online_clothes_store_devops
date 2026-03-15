@@ -1,13 +1,12 @@
 pipeline {
     agent any
 
-    stages {
-
-        stage('Clone Repository') {
-            steps {
-                git 'https://github.com/prajwalinna/online_clothes_store_devops.git'
-            }
-        }
+    stage('Clone Repository') {
+    steps {
+        git branch: 'development',
+            url: 'https://github.com/prajwalinna/online_clothes_store_devops.git'
+    }
+}
 
         stage('Build Docker Images') {
             steps {
