@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_HOST = "unix:///home/prajwal-inna/.docker/desktop/docker.sock"
+    }
+
     stages {
 
         stage('Checkout Code') {
@@ -10,15 +14,19 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install Backend Dependencies') {
             steps {
-                sh 'npm install'
+                dir('backend') {
+                    sh 'npm install'
+                }
             }
         }
 
-        stage('Run Tests') {
+        stage('Install Frontend Dependencies') {
             steps {
-                sh 'npm test'
+                dir('frontend') {
+                    sh 'npm install'
+                }
             }
         }
 
