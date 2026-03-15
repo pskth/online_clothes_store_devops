@@ -1,11 +1,26 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_HOST = "unix:///home/prajwal-inna/.docker/desktop/docker.sock"
-    }
-
     stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'development',
+                url: 'https://github.com/prajwalinna/online_clothes_store_devops.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
 
         stage('Build Docker Images') {
             steps {
@@ -24,6 +39,5 @@ pipeline {
                 sh 'docker ps'
             }
         }
-
     }
 }
