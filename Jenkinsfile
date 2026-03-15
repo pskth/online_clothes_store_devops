@@ -6,7 +6,7 @@ pipeline {
     }
 
     stages {
-        
+
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
@@ -56,27 +56,29 @@ pipeline {
         }
 
     }
+
     post {
 
-    success {
-        setGitHubPullRequestStatus(
-            context: 'jenkins/build',
-            state: 'SUCCESS'
-        )
-    }
+        success {
+            setGitHubPullRequestStatus(
+                context: 'jenkins/build',
+                state: 'SUCCESS'
+            )
+        }
 
-    failure {
-        setGitHubPullRequestStatus(
-            context: 'jenkins/build',
-            state: 'FAILURE'
-        )
-    }
+        failure {
+            setGitHubPullRequestStatus(
+                context: 'jenkins/build',
+                state: 'FAILURE'
+            )
+        }
 
-    unstable {
-        setGitHubPullRequestStatus(
-            context: 'jenkins/build',
-            state: 'FAILURE'
-        )
+        unstable {
+            setGitHubPullRequestStatus(
+                context: 'jenkins/build',
+                state: 'FAILURE'
+            )
+        }
+
     }
-}
 }
