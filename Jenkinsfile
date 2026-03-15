@@ -54,6 +54,32 @@ pipeline {
                 sh 'docker ps'
             }
         }
+    }
 
+    post {
+
+        success {
+            setGitHubPullRequestStatus(
+                context: 'jenkins/build',
+                status: 'SUCCESS',
+                description: 'Jenkins build succeeded'
+            )
+        }
+
+        failure {
+            setGitHubPullRequestStatus(
+                context: 'jenkins/build',
+                status: 'FAILURE',
+                description: 'Jenkins build failed'
+            )
+        }
+
+        unstable {
+            setGitHubPullRequestStatus(
+                context: 'jenkins/build',
+                status: 'FAILURE',
+                description: 'Jenkins build unstable'
+            )
+        }
     }
 }
