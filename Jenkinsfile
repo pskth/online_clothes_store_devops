@@ -60,6 +60,7 @@ pipeline {
                 sh 'docker ps'
             }
         }
+
     }
 
     post {
