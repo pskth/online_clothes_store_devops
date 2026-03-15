@@ -7,6 +7,12 @@ pipeline {
 
     stages {
 
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
@@ -54,30 +60,35 @@ pipeline {
                 sh 'docker ps'
             }
         }
-
     }
 
     post {
 
         success {
-            setGitHubPullRequestStatus(
-                context: 'jenkins/build',
-                state: 'SUCCESS'
-            )
+            script {
+                setGitHubPullRequestStatus(
+                    context: 'jenkins/build',
+                    state: 'SUCCESS'
+                )
+            }
         }
 
         failure {
-            setGitHubPullRequestStatus(
-                context: 'jenkins/build',
-                state: 'FAILURE'
-            )
+            script {
+                setGitHubPullRequestStatus(
+                    context: 'jenkins/build',
+                    state: 'FAILURE'
+                )
+            }
         }
 
         unstable {
-            setGitHubPullRequestStatus(
-                context: 'jenkins/build',
-                state: 'FAILURE'
-            )
+            script {
+                setGitHubPullRequestStatus(
+                    context: 'jenkins/build',
+                    state: 'FAILURE'
+                )
+            }
         }
 
     }
