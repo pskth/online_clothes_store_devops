@@ -1,16 +1,15 @@
-
 services:
 
   mongo:
-  image: mongo:6
-  ports:
-    - "27017:27017"
-  healthcheck:
-    test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-    interval: 5s
-    timeout: 5s
-    retries: 5
-    
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
     build: ./backend
     ports:
@@ -20,12 +19,10 @@ services:
         condition: service_healthy
     environment:
       MONGODB_URI: mongodb://mongo:27017/clothingstore
-    
+
   frontend:
     build: ./frontend
     ports:
       - "5173:5173"
     depends_on:
       - backend
-
-  
