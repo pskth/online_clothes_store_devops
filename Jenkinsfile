@@ -18,9 +18,12 @@ stages {
 
     stage('Start MongoDB') {
         steps {
-            sh 'docker run -d -p 27017:27017 --name test-mongo mongo'
+            sh '''
+            docker rm -f test-mongo || true
+            docker run -d -p 27017:27017 --name test-mongo mongo
+            '''
         }
-    }
+}
 
     stage('Install Backend Dependencies') {
         steps {
@@ -72,6 +75,21 @@ stages {
             docker tag online-clothing-ci-backend ${NEXUS_REGISTRY}/backend:${IMAGE_TAG}
             docker tag online-clothing-ci-frontend ${NEXUS_REGISTRY}/frontend:${IMAGE_TAG}
             '''
+        }
+    }
+    
+    stage('Login to Nexus') {
+        steps {
+            withCredentials([usernamePassword(
+                credentialsId: 'nexus-docker',
+                usernameVariable: 'NEXUS_USER',
+                passwordVariable: 'NEXUS_PASS'
+            )]) {
+                sh '''
+                echo $NEXUS_PASS | docker login ${NEXUS_REGISTRY} \
+                -u $NEXUS_USER --password-stdin
+                '''
+            }
         }
     }
 
