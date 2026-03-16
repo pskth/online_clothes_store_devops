@@ -8,8 +8,8 @@ describe("Signup API", () => {
     const res = await request(app)
       .post("/api/user/register")
       .send({
-        name: "testuser",
-        email: "test@test.com",
+        name: "prajwal",
+        email: "prajwalinna@gmail.com",
         password: "123456"
       })
 
