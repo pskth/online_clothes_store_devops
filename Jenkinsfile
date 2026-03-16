@@ -23,7 +23,7 @@ stages {
             docker run -d -p 27017:27017 --name test-mongo mongo
             '''
         }
-}
+    }
 
     stage('Install Backend Dependencies') {
         steps {
@@ -77,7 +77,7 @@ stages {
             '''
         }
     }
-    
+
     stage('Login to Nexus') {
         steps {
             withCredentials([usernamePassword(
