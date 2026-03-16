@@ -8,7 +8,7 @@ describe("Login API", () => {
     const res = await request(app)
       .post("/api/user/login")
       .send({
-        email: "test@test.com",
+        email: "prajwalinna@gmail.com",
         password: "123456"
       })
 
