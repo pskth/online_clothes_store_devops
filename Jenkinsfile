@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HOST = "unix:///home/prajwal-inna/.docker/desktop/docker.sock"
-        NEXUS_REGISTRY="localhost:8083"
+        NEXUS_REGISTRY="host.docker.internal"
         IMAGE_TAG="pr-${env.CHANGE_ID}-build-${env.BUILD_ID}"
         GITHUB_REPO = "prajwalinna/online_clothes_store_devops"
     }
@@ -71,7 +71,7 @@ pipeline {
             when { expression { env.CHANGE_ID !=null } }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'nexus-creds',passwordVariable: 'NEXUS_PASS' , usernameVariable: 'NEXUS_USER')]){
-                    sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASS} http://${NEXUS_REGISTRY}"
+                    sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASS} https://${NEXUS_REGISTRY}"
                     sh "docker push ${NEXUS_REGISTRY}/cloth-shop/backend:${IMAGE_TAG}"
                     sh "docker push ${NEXUS_REGISTRY}/cloth-shop/frontend:${IMAGE_TAG}"
 
@@ -87,7 +87,6 @@ pipeline {
                 if (env.CHANGE_ID) {
                     echo "Build successful! Pushed to Nexus. Merging PR #${env.CHANGE_ID}..."
                     withCredentials([string(credentialsId: 'github-token', variable: 'GH_TOKEN')]) {
-                        // GitHub API call to merge the PR
                         sh """
                         curl -s -X PUT \
                           -H "Accept: application/vnd.github+json" \
@@ -106,7 +105,6 @@ pipeline {
                 if (env.CHANGE_ID) {
                     echo "Build failed! Closing PR #${env.CHANGE_ID}..."
                     withCredentials([string(credentialsId: 'github-token', variable: 'GH_TOKEN')]) {
-                        // GitHub API call to close the PR
                         sh """
                         curl -s -X PATCH \
                           -H "Accept: application/vnd.github+json" \
